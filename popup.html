@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Network Request Monitor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Network Requests</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th>Método</th>
+        <th>Status</th>
+        <th>Tempo</th>
+      </tr>
+    </thead>
+    <tbody id="requestsTable">
+    </tbody>
+  </table>
+  <script src="popup.js"></script>
+</body>
+</html>
