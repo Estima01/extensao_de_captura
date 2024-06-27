@@ -1,15 +1,15 @@
 console.log("Background script iniciado.");
 
-chrome.webRequest.onCompleted.addListener(
+chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
-    console.log("Requisição capturada:", details);
+    console.log("Corpo da requisição capturado:", details);
 
     chrome.storage.local.get({ requests: [] }, (result) => {
       let requests = result.requests;
       requests.push({
         url: details.url,
         method: details.method,
-        statusCode: details.statusCode,
+        requestBody: details.requestBody,
         timeStamp: details.timeStamp
       });
       if (requests.length > 100) {
@@ -20,7 +20,28 @@ chrome.webRequest.onCompleted.addListener(
       });
     });
   },
-  { urls: ["<all_urls>"] }
+  { urls: ["https://admin.anota.ai/*"] },
+  ["requestBody"]
+);
+
+chrome.webRequest.onCompleted.addListener(
+  (details) => {
+    console.log("Requisição completada:", details);
+
+    chrome.storage.local.get({ requests: [] }, (result) => {
+      let requests = result.requests;
+      for (let request of requests) {
+        if (request.url === details.url && request.timeStamp === details.timeStamp) {
+          request.statusCode = details.statusCode;
+          break;
+        }
+      }
+      chrome.storage.local.set({ requests: requests }, () => {
+        console.log("Status da requisição atualizado:", requests);
+      });
+    });
+  },
+  { urls: ["https://admin.anota.ai/*"] }
 );
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
