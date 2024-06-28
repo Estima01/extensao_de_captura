@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
   const requestsTable = document.getElementById('requestsTable');
+  const searchInput = document.getElementById('search');
 
   // Função para carregar e exibir as requisições
-  function loadRequests(filter) {
+  function loadRequests(filter, searchQuery = '') {
     chrome.runtime.sendMessage({ action: "getRequests" }, function (response) {
       if (chrome.runtime.lastError) {
         console.error("Erro ao enviar mensagem: " + chrome.runtime.lastError.message);
@@ -12,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
       requestsTable.innerHTML = ''; // Limpa a tabela
 
       response.forEach(request => {
-        if (filter === 'all' || request.method === filter) {
+        if ((filter === 'all' || request.method === filter) &&
+            request.url.includes(searchQuery)) {
           const row = document.createElement('tr');
 
           const urlCell = document.createElement('td');
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
           row.appendChild(methodCell);
 
           const statusCell = document.createElement('td');
-          statusCell.textContent = request.statusCode || 'N/A';
+          statusCell.textContent = request.statusCode !== null ? request.statusCode : 'N/A';
           row.appendChild(statusCell);
 
           const timeCell = document.createElement('td');
@@ -34,10 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
           const payloadCell = document.createElement('td');
           if (request.requestBody && request.requestBody.formData) {
-            // Mostrar dados de formulário (formData), se disponíveis
             payloadCell.textContent = JSON.stringify(request.requestBody.formData);
           } else if (request.requestBody && request.requestBody.raw) {
-            // Decodificar dados brutos (raw), se disponíveis
             let rawData = '';
             request.requestBody.raw.forEach(part => {
               const decoder = new TextDecoder('utf-8');
@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             payloadCell.textContent = rawData;
           } else {
-            // Caso não haja dados disponíveis
             payloadCell.textContent = 'N/A';
           }
           row.appendChild(payloadCell);
@@ -61,8 +60,16 @@ document.addEventListener('DOMContentLoaded', function () {
   buttons.forEach(button => {
     button.addEventListener('click', function () {
       const filter = this.getAttribute('data-filter');
-      loadRequests(filter);
+      const searchQuery = searchInput.value;
+      loadRequests(filter, searchQuery);
     });
+  });
+
+  // Adiciona evento de input no campo de pesquisa
+  searchInput.addEventListener('input', function () {
+    const filter = document.querySelector('.filter-buttons button.active').getAttribute('data-filter') || 'all';
+    const searchQuery = searchInput.value;
+    loadRequests(filter, searchQuery);
   });
 
   // Carrega todas as requisições por padrão

@@ -24,17 +24,21 @@
     .filter-buttons button {
       margin-right: 10px;
     }
+    .filter-buttons button.active {
+      background-color: #007bff;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <h1>Network Requests</h1>
   <div class="filter-buttons">
-    <button data-filter="all">All</button>
+    <button data-filter="all" class="active">All</button>
     <button data-filter="GET">GET</button>
     <button data-filter="POST">POST</button>
     <button data-filter="PUT">PUT</button>
     <button data-filter="OPTIONS">OPTIONS</button>
-    <!-- Adicione mais botões conforme necessário -->
+    <input type="text" id="search" placeholder="Search URL">
   </div>
   <table>
     <thead>
