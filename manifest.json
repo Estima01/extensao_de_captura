@@ -3,10 +3,13 @@
   "name": "Network Request Monitor",
   "version": "1.0",
   "permissions": [
+    "storage",
     "webRequest",
-    "tabs",
     "activeTab",
-    "storage"
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://admin.anota.ai/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -24,7 +27,7 @@
     "48": "icons/analise.png",
     "128": "icons/analise.png"
   },
-  "host_permissions": [
-    "https://admin.anota.ai/*"
-  ]
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
 }

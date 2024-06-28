@@ -1,29 +1,35 @@
 console.log("Background script iniciado.");
 
-chrome.webRequest.onBeforeRequest.addListener(
-  (details) => {
-    console.log("Corpo da requisição capturado:", details);
+// Função para capturar o corpo da requisição POST
+function capturePostRequest(details) {
+  console.log("Corpo da requisição capturado (POST):", details);
 
-    chrome.storage.local.get({ requests: [] }, (result) => {
-      let requests = result.requests;
-      requests.push({
-        url: details.url,
-        method: details.method,
-        requestBody: details.requestBody,
-        timeStamp: details.timeStamp
-      });
-      if (requests.length > 100) {
-        requests.shift(); // Limita a quantidade de requisições armazenadas
-      }
-      chrome.storage.local.set({ requests: requests }, () => {
-        console.log("Requisição armazenada:", requests);
-      });
+  chrome.storage.local.get({ requests: [] }, (result) => {
+    let requests = result.requests;
+    requests.push({
+      url: details.url,
+      method: details.method,
+      requestBody: details.requestBody,
+      timeStamp: details.timeStamp,
+      statusCode: details.statusCode,
     });
-  },
-  { urls: ["https://admin.anota.ai/*"] },
+    if (requests.length > 100) {
+      requests.shift(); // Limita a quantidade de requisições armazenadas
+    }
+    chrome.storage.local.set({ requests: requests }, () => {
+      console.log("Requisição armazenada:", requests);
+    });
+  });
+}
+
+// Listener para capturar requisições POST
+chrome.webRequest.onBeforeRequest.addListener(
+  capturePostRequest,
+  { urls: ["https://admin.anota.ai/*"], types: ["xmlhttprequest"] },
   ["requestBody"]
 );
 
+// Listener para capturar requisições completadas
 chrome.webRequest.onCompleted.addListener(
   (details) => {
     console.log("Requisição completada:", details);
@@ -41,9 +47,10 @@ chrome.webRequest.onCompleted.addListener(
       });
     });
   },
-  { urls: ["https://admin.anota.ai/*"] }
+  { urls: ["https://admin.anota.ai/*"], types: ["xmlhttprequest"] }
 );
 
+// Listener para responder à mensagem para obter requisições
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "getRequests") {
     console.log("Solicitação para obter requisições recebida.");
