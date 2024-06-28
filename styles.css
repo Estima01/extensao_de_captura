@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    padding-top: 80px; /* Espaço suficiente para a barra fixa */
+    margin: 0;
+    min-height: 400px; /* Define a altura mínima da janela */
+    min-width: 600px; /* Define a largura mínima da janela */
+    overflow: auto;
+  }
+  
+  .table-container {
+    padding-top: 20px; /* Espaço entre a tabela e a barra fixa */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .filter-buttons {
+    margin-bottom: 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box; /* Inclui padding na largura */
+  }
+  
+  .filter-buttons button,
+  .filter-buttons input {
+    margin-right: 10px;
+  }
+  

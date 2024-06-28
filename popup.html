@@ -2,33 +2,7 @@
 <html>
 <head>
   <title>Network Request Monitor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    .filter-buttons {
-      margin-bottom: 20px;
-    }
-    .filter-buttons button {
-      margin-right: 10px;
-    }
-    .filter-buttons button.active {
-      background-color: #007bff;
-      color: white;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>Network Requests</h1>
@@ -40,19 +14,21 @@
     <button data-filter="OPTIONS">OPTIONS</button>
     <input type="text" id="search" placeholder="Search URL">
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>URL</th>
-        <th>Método</th>
-        <th>Status</th>
-        <th>Tempo</th>
-        <th>Payload</th>
-      </tr>
-    </thead>
-    <tbody id="requestsTable">
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Metodo</th>
+          <th>Status</th>
+          <th>Tempo</th>
+          <th>Payload</th>
+        </tr>
+      </thead>
+      <tbody id="requestsTable">
+      </tbody>
+    </table>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

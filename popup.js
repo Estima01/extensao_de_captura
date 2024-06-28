@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const buttons = document.querySelectorAll('.filter-buttons button');
   buttons.forEach(button => {
     button.addEventListener('click', function () {
+      buttons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
       const filter = this.getAttribute('data-filter');
       const searchQuery = searchInput.value;
       loadRequests(filter, searchQuery);
